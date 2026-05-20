@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>CAP — Scholarship Portal</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --brand: #2c6bed;
+      --brand-dark: #1f4fb0;
+      --accent: #00b894;
+      --bg: #f7f9fc;
+      --text: #1f2937;
+    }
+    body { font-family: 'Poppins', 'Montserrat', sans-serif; background: var(--bg); color: var(--text); }
+    .navbar-brand { font-weight: 600; letter-spacing: 0.3px; }
+    .brand-badge { background: var(--brand); color: #fff; border-radius: 6px; padding: 6px 10px; margin-right: 8px; font-weight: 600; }
+    .hero {
+      background: linear-gradient(135deg, #eaf1ff 0%, #ffffff 100%);
+      border-bottom: 1px solid #e7ebf3;
+    }
+    .section-title { font-weight: 600; margin-bottom: .75rem; }
+    .card { border: 1px solid #e8ecf3; }
+    .filter-chip { border: 1px solid #d8deea; border-radius: 20px; padding: 6px 12px; cursor: pointer; background: #fff; }
+    .filter-chip.active { background: var(--brand); color: #fff; border-color: var(--brand-dark); }
+    .deadline-pill { background: #fff3cd; color: #915f00; border-radius: 20px; padding: 4px 10px; font-size: 12px; }
+    .eligible-pill { background: #e7f8f0; color: #0f684b; border-radius: 20px; padding: 4px 10px; font-size: 12px; }
+    .not-eligible-pill { background: #ffe7e7; color: #8b2b2b; border-radius: 20px; padding: 4px 10px; font-size: 12px; }
+    .sticky-actions { position: sticky; top: 80px; }
+    .doc-tile { border: 1px dashed #cbd5e1; border-radius: 12px; background: #fff; padding: 16px; }
+    .table thead th { background: #f4f7fd; }
+    .footer { border-top: 1px solid #e7ebf3; background: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-white border-bottom">
+    <div class="container">
+      <span class="brand-badge">CAP</span>
+      <a class="navbar-brand" href="#">Scholarship Portal</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#scholarships">Scholarships</a></li>
+          <li class="nav-item"><a class="nav-link" href="#eligibility">Eligibility checker</a></li>
+          <li class="nav-item"><a class="nav-link" href="#apply">Apply</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="#important">Important dates</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faqs">FAQs</a></li>
+        </ul>
+        <form class="d-flex me-3" role="search">
+          <input class="form-control" type="search" placeholder="Search scholarships"/>
+        </form>
+        <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+          <i class="bi bi-person"></i> Login
+        </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+          <i class="bi bi-box-arrow-in-right"></i> Register
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="home" class="hero py-4">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <h1 class="mb-2">Find, check, and apply for scholarships—fast.</h1>
+          <p class="mb-3">Personalized eligibility, smart recommendations, deadline tracking, and reusable documents—all in one dashboard.</p>
+          <div class="d-flex gap-2">
+            <a href="#eligibility" class="btn btn-primary"><i class="bi bi-stars"></i> Check eligibility</a>
+            <a href="#scholarships" class="btn btn-outline-primary"><i class="bi bi-search"></i> Browse scholarships</a>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card sticky-actions">
+            <div class="card-body">
+              <h6 class="section-title">Quick actions</h6>
+              <div class="d-grid gap-2">
+                <a href="#dashboard" class="btn btn-light">Open dashboard</a>
+                <a href="#documents" class="btn btn-light">Upload documents</a>
+                <a href="#compare" class="btn btn-light">Compare opportunities</a>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#alertsModal">Signup for alerts</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+<button onclick="loadNotifications()">View Notifications</button>
+<ul id="notificationList"></ul>
+
+  <!-- Eligibility checker -->
+  <section id="eligibility" class="py-5">
+    <div class="container">
+      <h2 class="section-title">Eligibility checker</h2>
+      <p>Fill your profile and instantly see “Eligible / Not eligible” with reasons and suggested improvements.</p>
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-body">
+              <form id="profileForm" class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Full name</label>
+                  <input type="text" class="form-control" name="fullName" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Gender</label>
+                  <select class="form-select" name="gender" required>
+                    <option value="">Select</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                    <option>Prefer not to say</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Age</label>
+                  <input type="number" class="form-control" name="age" min="12" max="80" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Education level</label>
+                  <select class="form-select" name="level" required>
+                    <option value="">Select</option>
+                    <option>10th</option>
+                    <option>12th</option>
+                    <option>UG</option>
+                    <option>PG</option>
+                    <option>PhD</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">CGPA / %</label>
+                  <input type="text" class="form-control" name="grade" placeholder="e.g., 8.2 / 82%">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">State/Region</label>
+                  <input type="text" class="form-control" name="region" placeholder="e.g., TG, India">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Field of study</label>
+                  <input type="text" class="form-control" name="field" placeholder="e.g., Computer Science">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Category</label>
+                  <select class="form-select" name="category">
+                    <option value="">Select</option>
+                    <option>SC</option>
+                    <option>ST</option>
+                    <option>OBC</option>
+                    <option>General</option>
+                    <option>Minority</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Annual family income</label>
+                  <input type="number" class="form-control" name="income" placeholder="₹">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Course & branch</label>
+                  <input type="text" class="form-control" name="course" placeholder="e.g., B.Tech CSE">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">College</label>
+                  <input type="text" class="form-control" name="college">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Sports & interests</label>
+                  <input type="text" class="form-control" name="interests" placeholder="e.g., Hockey, Robotics">
+                </div>
+                <div class="col-12 d-flex gap-2">
+                  <button type="button" id="checkEligibility" class="btn btn-primary">Check eligibility</button>
+                  <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                </div>
+              </form>
+              <hr/>
+              <div id="eligibilityResult" class="d-none">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <span id="eligibilityBadge" class="eligible-pill">Eligible</span>
+                  <span class="deadline-pill">Top matched opportunities prioritized by deadline</span>
+                </div>
+                <ul id="eligibilityReasons" class="list-unstyled mb-3"></ul>
+                <div id="improvementTips" class="alert alert-info d-none">
+                  <i class="bi bi-lightbulb"></i> Suggested improvements: complete missing profile, enhance grades, add certificates.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar tips -->
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="section-title">What you’ll need</h6>
+              <ul class="list-unstyled">
+                <li><i class="bi bi-file-earmark-text"></i> Transcripts</li>
+                <li><i class="bi bi-people"></i> Recommendation letters</li>
+                <li><i class="bi bi-pencil-square"></i> Personal essay</li>
+                <li><i class="bi bi-card-checklist"></i> ID & income certificate</li>
+              </ul>
+              <a href="#documents" class="btn btn-outline-primary w-100">Upload documents</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <button onclick="loadNotifications()">View Notifications</button>
+<ul id="notificationList"></ul>
+
+  <!-- Dashboard -->
+  <section id="dashboard" class="py-5">
+    <div class="container">
+      <h2 class="section-title">Your dashboard</h2>
+      <p>View eligible scholarships, apply, track status, and receive notifications.</p>
+
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="mb-0">Recommended scholarships</h6>
+                <span class="deadline-pill">3 deadlines in next 10 days</span>
+              </div>
+              <div id="recommendedList" class="row row-cols-1 row-cols-md-2 g-3">
+                <!-- Cards injected by JS -->
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h6 class="mb-2">Deadline tracker</h6>
+              <div class="table-responsive">
+                <table class="table align-middle">
+                  <thead>
+                    <tr>
+                      <th>Scholarship</th>
+                      <th>Last date</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="deadlineTable">
+                    <!-- Rows injected by JS -->
+                  </tbody>
+                </table>
+              </div>
+              <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#alertsModal">
+                <i class="bi bi-bell"></i> Enable deadline alerts
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="section-title">Notifications</h6>
+              <ul id="notifications" class="list-group list-group-flush">
+                <!-- Items injected by JS -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+ <!-- Scholarships browse -->
+<section id="scholarships" class="py-5">
+  <div class="container">
+    <h2 class="section-title">Browse Scholarships</h2>
+    <p>Filter by category, amount, level, and more. Click “Apply” to open the official website.</p>
+
+
+
+    <!-- Filters -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-8 d-flex flex-wrap gap-2">
+            <span class="filter-chip active" data-filter="all">All</span>
+            <span class="filter-chip" data-filter="merit">Merit-based</span>
+            <span class="filter-chip" data-filter="need">Need-based</span>
+            <span class="filter-chip" data-filter="minority">Minority</span>
+            <span class="filter-chip" data-filter="women">Women</span>
+            <span class="filter-chip" data-filter="research">Research</span>
+          </div>
+
+          <div class="col-md-4">
+            <select id="levelFilter" class="form-select">
+              <option value="">Any level</option>
+              <option>10th</option>
+              <option>12th</option>
+              <option>UG</option>
+              <option>PG</option>
+              <option>PhD</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ✅ Catalog (MAIN DISPLAY AREA) -->
+    <div id="catalog" class="row row-cols-1 row-cols-md-3 g-3">
+      <!-- Cards will come here -->
+    </div>
+
+  </div>
+</section>
+
+  <!-- Comparison tool -->
+  <section id="compare" class="py-5">
+    <div class="container">
+      <h2 class="section-title">Compare scholarships</h2>
+      <p>Select scholarships and view them side-by-side.</p>
+      <div class="card">
+        <div class="card-body">
+          <button onclick="loadCompare()" class="btn btn-primary mt-3">
+  Compare Scholarships
+</button>
+
+          <div class="table-responsive">
+            <table class="table align-middle" id="compareTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Level</th>
+                  <th>Category</th>
+                  <th>Grade</th>
+                  <th>Income</th>
+                  <th>Deadline</th>
+                </tr>
+              </thead>
+              <tbody id="compareBody">
+                <!-- Rows injected by JS -->
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-outline-secondary" id="clearCompare">Clear comparison</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<!-- Apply guidance -->
+<section id="apply" class="py-5">
+  <div class="container">
+    <h2 class="section-title">Application Guidance</h2>
+
+    <div class="row g-4">
+
+      <!-- LEFT SIDE -->
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
+
+            <h6>Step-by-step</h6>
+            <ol class="mb-3">
+              <li>Collect required documents (transcripts, letters, essays).</li>
+              <li>Check eligibility using the eligibility section.</li>
+              <li>Shortlist scholarships from Browse section.</li>
+              <li>Customize your essay for each application.</li>
+              <li>Click <b>Apply</b> in Browse section to open official website.</li>
+              <li>Submit before deadline and track alerts.</li>
+            </ol>
+
+            <!-- ✅ FIXED BUTTON -->
+            <button class="btn btn-secondary" disabled>
+              Use "Apply" button in Browse section
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body">
+
+            <h6>Checklist</h6>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="chk1">
+              <label class="form-check-label" for="chk1">Academic transcripts</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="chk2">
+              <label class="form-check-label" for="chk2">Recommendation letters</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="chk3">
+              <label class="form-check-label" for="chk3">Personal essay</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="chk4">
+              <label class="form-check-label" for="chk4">Income certificate</label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="py-5">
+  <div class="container">
+    <h2 class="section-title">Contact Us</h2>
+    <div class="row g-4">
+      
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5>Get in Touch</h5>
+            <p>Email: support@scholarshipportal.com</p>
+            <p>Phone: +91 9876543210</p>
+            <p>Location: Hyderabad, India</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5>Send Message</h5>
+            <form>
+              <input type="text" class="form-control mb-2" placeholder="Your Name">
+              <input type="email" class="form-control mb-2" placeholder="Your Email">
+              <textarea class="form-control mb-2" placeholder="Your Message"></textarea>
+              <button class="btn btn-primary">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Important Dates -->
+<section id="important" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="section-title">Important Dates</h2>
+
+    <div class="card">
+      <div class="card-body">
+        <ul class="list-group">
+          <li class="list-group-item">
+            National Merit Scholarship – Last Date: 15 July 2026
+          </li>
+          <li class="list-group-item">
+            Sports Excellence Scholarship – Last Date: 1 August 2026
+          </li>
+          <li class="list-group-item">
+            Minority Scholarship – Last Date: 30 June 2026
+          </li>
+          <li class="list-group-item">
+            Women Empowerment Scholarship – Last Date: 10 August 2026
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQs -->
+<section id="faqs" class="py-5">
+  <div class="container">
+    <h2 class="section-title">FAQs</h2>
+
+    <div class="accordion" id="faqAccordion">
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#faq1">
+            Who can apply for scholarships?
+          </button>
+        </h2>
+        <div id="faq1" class="accordion-collapse collapse show">
+          <div class="accordion-body">
+            Students from 10th, 12th, UG, PG, and PhD levels can apply based on eligibility.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq2">
+            How do I apply?
+          </button>
+        </h2>
+        <div id="faq2" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            Click the apply button and you will be redirected to the official website.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq3">
+            Is this website free?
+          </button>
+        </h2>
+        <div id="faq3" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            Yes, this platform is completely free for students.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+  <!-- Footer -->
+  <footer class="footer py-4">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div>
+        <strong>CAP</strong> Scholarship Portal — Guidance & Navigation
+      </div>
+      <div class="d-flex gap-3">
+        <a href="#contact" class="link-secondary">Contact us</a>
+        <a href="#faqs" class="link-secondary">FAQs</a>
+        <a href="#important" class="link-secondary">Important dates</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modals: Login/Register/Alerts/Apply -->
+  <div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Login</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <label class="form-label">Email or mobile</label>
+          <input type="text" class="form-control" required>
+          <label class="form-label mt-2">Password</label>
+          <input type="password" class="form-control" required>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="captcha">
+            <label class="form-check-label" for="captcha">I’m not a robot</label>
+          </div>
+          <a href="#" class="small d-inline-block mt-2">Forgot password?</a>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit">Login</button>
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal fade" id="registerModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Register</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <label class="form-label">Full name</label>
+          <input type="text" class="form-control" required>
+          <label class="form-label mt-2">Email</label>
+          <input type="email" class="form-control" required>
+          <label class="form-label mt-2">Mobile</label>
+          <input type="tel" class="form-control" required>
+          <label class="form-label mt-2">Password</label>
+          <input type="password" class="form-control" required>
+          <label class="form-label mt-2">Confirm password</label>
+          <input type="password" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="button" id="registerBtn">Register</button>
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal fade" id="alertsModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Deadline alerts</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <p>Receive notifications 7 days and 2 days before each deadline.</p>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="emailAlert" checked>
+            <label class="form-check-label" for="emailAlert">Email alerts</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="smsAlert">
+            <label class="form-check-label" for="smsAlert">SMS alerts</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="calendarSync">
+            <label class="form-check-label" for="calendarSync">Add to calendar</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success">Save</button>
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="applyModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Apply guidance</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <p>We’ll take you to the official website. Make sure you have your documents ready.</p>
+          <ul>
+            <li>Check eligibility and requirements.</li>
+            <li>Customize your essay.</li>
+            <li>Submit before the deadline.</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-primary" href="#" target="_blank">Open official site</a>
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Alerts Modal -->
+<div class="modal fade" id="alertsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enable Deadline Alerts</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="alertsForm">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="emailAlert" value="email">
+            <label class="form-check-label" for="emailAlert">Email</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="smsAlert" value="sms">
+            <label class="form-check-label" for="smsAlert">SMS</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="calendarAlert" value="calendar">
+            <label class="form-check-label" for="calendarAlert">Add to Calendar</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="saveAlerts" class="btn btn-primary">Save Alerts</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  <!-- Bootstrap + minimal JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+
+    async function loadNotifications() {
+
+  const res = await fetch('http://localhost:5000/notifications')
+  const data = await res.json()
+
+  const list = document.getElementById('notificationList')
+  list.innerHTML = ""
+
+  data.forEach(n => {
+    const li = document.createElement('li')
+    li.innerHTML = `📩 ${n.scholarshipName} - Deadline: ${n.deadline}`
+    list.appendChild(li)
+  })
+}
+
+    
+document.getElementById('saveAlerts').addEventListener('click', async () => {
+
+  const alerts = [];
+  if (emailAlert.checked) alerts.push('email');
+  if (smsAlert.checked) alerts.push('sms');
+  if (calendarAlert.checked) alerts.push('calendar');
+
+  localStorage.setItem('deadlineAlerts', JSON.stringify(alerts));
+
+  // ✅ CALL BACKEND FOR EMAIL
+  if (alerts.includes('email')) {
+    await fetch('http://localhost:5000/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: "test@gmail.com",   // replace with real user email
+        scholarshipName: "Engineering Excellence Award",
+        deadline: "2026-07-01"
+      })
+    });
+  }
+
+  alert("Alerts enabled: " + alerts.join(", "));
+
+  const modal = bootstrap.Modal.getInstance(document.getElementById('alertsModal'));
+  modal.hide();
+});
+// ================= ELIGIBILITY =================
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('profileData');
+  if (saved) {
+    const data = JSON.parse(saved);
+    const form = document.getElementById('profileForm');
+    Object.keys(data).forEach(key => {
+      if (form[key]) form[key].value = data[key];
+    });
+    alert("We’ve restored your previous profile details.");
+  }
+});
+
+document.getElementById('checkEligibility').addEventListener('click', async () => {
+
+  const form = document.getElementById('profileForm')
+
+   const data = {
+    fullName: form.fullName.value,   // ✅ use fullName, not name
+    age: Number(form.age.value),
+    level: form.level.value,
+    grade: Number(form.grade.value), // ✅ use grade, not marks
+    income: Number(form.income.value),
+    category: form.category.value,
+    gender: form.gender.value,
+    region: form.region.value,
+    field: form.field.value,
+    course: form.course.value,
+    college: form.college.value,
+    interests: form.interests.value
+  };
+
+  console.log("Sending eligibility data:", data)
+
+
+
+
+  try {
+    const res = await fetch('http://localhost:5000/check-eligibility', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+
+    const result = await res.json()
+
+    const resultDiv = document.getElementById('eligibilityResult')
+    const reasonsList = document.getElementById('eligibilityReasons')
+    const badge = document.getElementById('eligibilityBadge')
+
+    resultDiv.classList.remove('d-none')
+    reasonsList.innerHTML = ""
+
+    // STATUS
+    badge.textContent = result.status
+    badge.className = result.status === "Eligible"
+      ? "eligible-pill"
+      : "not-eligible-pill"
+
+    // MATCHED SCHOLARSHIPS
+    if (result.matched.length > 0) {
+
+  result.matched.forEach(s => {
+
+    const card = document.createElement('div')
+    card.className = "card p-2 mb-2"
+
+    card.innerHTML = `
+      <h6>🎓 ${s.fullName}</h6>
+      <small>Deadline: ${s.deadline}</small><br>
+
+      <a href="${s.link}" target="_blank">
+        <button style="margin-top:5px;">Apply Now</button>
+      </a>
+
+      <button onclick="notifyUser('${s.fullName}', '${s.deadline}')"
+        style="margin-top:5px;">
+        Notify Me
+      </button>
+    `
+
+    reasonsList.appendChild(card)
+  })
+
+}
+     else {
+  const li = document.createElement('li')
+  li.innerHTML = "❌ No matching scholarships found"
+  reasonsList.appendChild(li)
+}
+
+    // REASONS
+    if (result.reasons && result.reasons.length > 0) {
+
+      const title = document.createElement('p')
+      title.innerHTML = "<b>Reasons:</b>"
+      title.style.marginTop = "10px"
+      reasonsList.appendChild(title)
+
+      result.reasons.forEach(r => {
+        const li = document.createElement('li')
+        li.style.color = "red"
+        li.innerHTML = `⚠️ ${r}`
+        reasonsList.appendChild(li)
+      })
+    }
+
+  } catch (err) {
+    console.error(err)
+    alert("Error checking eligibility")
+  }
+})
+
+
+//comparison
+
+async function loadCompare() {
+  const res = await fetch('http://localhost:5000/scholarships');
+  const data = await res.json();
+
+  const tbody = document.getElementById("compareBody");
+  tbody.innerHTML = "";
+
+  if (data.length < 2) {
+    tbody.innerHTML = "<tr><td colspan='6'>Not enough scholarships</td></tr>";
+    return;
+  }
+
+  // Take first 2 for demo
+  const s1 = data[0];
+  const s2 = data[1];
+
+  const row = `
+    <tr>
+      <td>${s1.fullName} vs ${s2.fullName}</td>
+      <td>${s1.level} / ${s2.level}</td>
+      <td>${s1.category} / ${s2.category}</td>
+      <td>${s1.grade} / ${s2.grade}</td>
+      <td>${s1.income} / ${s2.income}</td>
+      <td>${s1.deadline} / ${s2.deadline}</td>
+    </tr>
+    `;
+
+  tbody.innerHTML = row;
+}
+
+
+// ================= REGISTER =================
+document.getElementById('registerBtn').addEventListener('click', async () => {
+
+  const inputs = document.querySelectorAll('#registerModal input')
+
+  const data = {
+    name: inputs[0].value,
+    email: inputs[1].value,
+    mobile: inputs[2].value,
+    password: inputs[3].value
+  }
+
+  console.log("Sending data:", data)
+
+  try {
+    const res = await fetch('http://localhost:5000/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+
+    const msg = await res.text()
+    alert(msg)
+
+  } catch (err) {
+    console.error(err)
+    alert("Error connecting to server")
+  }
+})
+
+
+
+    
+function notifyUser(name, deadline) {
+  const email = prompt("Enter your email")
+
+  fetch('http://localhost:5000/notify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, scholarshipName: name, deadline })
+  })
+  .then(res => res.text())
+  .then(alert)
+}
+
+// FIX MODAL FOCUS ISSUE
+const modals = document.querySelectorAll('.modal')
+
+modals.forEach(modal => {
+  modal.addEventListener('hidden.bs.modal', () => {
+    document.activeElement.blur()
+  })
+})
+
+async function notifyUser(name, deadline) {
+
+  const email = prompt("Enter your email")
+
+  if (!email) {
+    alert("Email required")
+    return
+  }
+
+  try {
+    const res = await fetch('http://localhost:5000/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        scholarshipName: name,
+        deadline
+      })
+    })
+
+    const msg = await res.text()
+    alert(msg)
+
+  } catch (err) {
+    console.error(err)
+    alert("Error sending notification")
+  }
+}
+
+async function loadScholarships() {
+  const res = await fetch('http://localhost:5000/scholarships');
+  const data = await res.json();
+
+  const container = document.getElementById("catalog");
+  container.innerHTML = "";
+
+  data.forEach(s => {
+    container.innerHTML += `
+      <div class="col">
+        <div class="card h-100 p-3">
+          <h5>${s.fullName}</h5>
+          <p><b>Level:</b> ${s.level}</p>
+          <p><b>Category:</b> ${s.category}</p>
+          <p><b>Deadline:</b> ${s.deadline}</p>
+          <a href="${s.applyLink}" target="_blank" class="btn btn-primary">Apply</a>
+        </div>
+      </div>
+    `;
+  });
+}
+
+
+
+window.addEventListener('load', loadScholarships);
+
+let compareList = [];
+
+function addToCompare(name, deadline) {
+  compareList.push({ name, deadline });
+  updateCompareTable();
+}
+
+function updateCompareTable() {
+  const table = document.querySelector('#compareTable tbody');
+  table.innerHTML = "";
+
+  compareList.forEach(s => {
+    const row = `
+      <tr>
+        <td>${s.name}</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>${s.deadline}</td>
+      </tr>
+    `;
+    table.innerHTML += row;
+  });
+}
+
+let scholarships = []; // declare globally
+let currentFilter = "all";
+
+function fetchScholarships() {
+  fetch("http://localhost:5000/scholarships")
+    .then(res => res.json())
+    .then(data => {
+      scholarships = data;
+      displayScholarships(scholarships);
+    })
+    .catch(err => console.error("Error:", err));
+}
+function displayScholarships(data) {
+  const container = document.getElementById("catalog");
+  container.innerHTML = "";
+
+  if (data.length === 0) {
+    container.innerHTML = "<p>No scholarships found</p>";
+    return;
+  }
+
+  data.forEach(s => {
+    container.innerHTML += `
+      <div class="col">
+        <div class="card p-3">
+          <h5>${s.fullName}</h5>
+          <p>Category: ${s.category}</p>
+          <p>Level: ${s.level}</p>
+          <p>Deadline: ${s.deadline}</p>
+        </div>
+      </div>
+    `;
+  });
+}
+function applyFilters() {
+  const selectedLevel = document.getElementById("levelFilter").value;
+  let filtered = scholarships;
+
+  if (currentFilter !== "all") {
+    filtered = filtered.filter(s => s.category.toLowerCase() === currentFilter);
+
+  }
+
+  if (selectedLevel !== "") {
+    filtered = filtered.filter(s => s.level === selectedLevel);
+  }
+
+  displayScholarships(filtered);
+}
+
+
+// Category filter chips
+document.querySelectorAll(".filter-chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+
+    currentFilter = chip.getAttribute("data-filter");
+    applyFilters();
+  });
+});
+
+// Level filter select
+document.getElementById("levelFilter").addEventListener("change", applyFilters);
+
+// Optional Apply button
+document.getElementById("applyBtn")?.addEventListener("click", applyFilters);
+
+document.addEventListener("DOMContentLoaded", fetchScholarships);
+
+
+// ================= CHECKLIST SAVE & LOAD =================
+
+// Load saved checkbox states when page loads
+window.addEventListener("DOMContentLoaded", () => {
+  loadChecklist();
+});
+
+// Save when checkbox is clicked
+document.querySelectorAll('.form-check-input').forEach((checkbox) => {
+  checkbox.addEventListener('change', () => {
+    saveChecklist();
+  });
+});
+
+// Save to localStorage
+function saveChecklist() {
+  const checklist = {
+    chk1: document.getElementById("chk1").checked,
+    chk2: document.getElementById("chk2").checked,
+    chk3: document.getElementById("chk3").checked,
+    chk4: document.getElementById("chk4").checked
+  };
+
+  localStorage.setItem("checklistData", JSON.stringify(checklist));
+}
+
+// Load from localStorage
+function loadChecklist() {
+  const data = JSON.parse(localStorage.getItem("checklistData"));
+
+  if (data) {
+    document.getElementById("chk1").checked = data.chk1 || false;
+    document.getElementById("chk2").checked = data.chk2 || false;
+    document.getElementById("chk3").checked = data.chk3 || false;
+    document.getElementById("chk4").checked = data.chk4 || false;
+  }
+}
+
+// ================= OPTIONAL: RESET BUTTON =================
+
+function clearChecklist() {
+  localStorage.removeItem("checklistData");
+
+  document.querySelectorAll('.form-check-input').forEach(cb => {
+    cb.checked = false;
+  });
+}
+
+
+  </script>
+</body>
+</html>
